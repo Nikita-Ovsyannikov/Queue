@@ -14,7 +14,11 @@ public:
 
     void push(const T& val) {
         if (sz == capacity) {
-            throw "Queue is full";
+           
+            capacity *= 2; 
+            if (capacity == 0) { 
+                capacity = 1;
+            }
         }
         data.push_back(val);
         sz++;
