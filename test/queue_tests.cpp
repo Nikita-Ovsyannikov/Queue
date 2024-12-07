@@ -69,7 +69,13 @@ TEST(TQueue, push_full_exception)
     Queue<int> q(2);
     q.push(1);
     q.push(2);
-    ASSERT_ANY_THROW(q.push(3));
+    ASSERT_NO_THROW(q.push(3));
+    ASSERT_EQ(q.get_capacity(), 4);
+    ASSERT_EQ(q.front(), 1);
+    q.pop();
+    ASSERT_EQ(q.front(), 2);
+    q.pop();
+    ASSERT_EQ(q.front(), 3);
 }
 
 TEST(TQueue, pop_empty_exception) 
@@ -99,7 +105,8 @@ TEST(TQueue, circular_behavior)
     ASSERT_EQ(q.front(), 4);
 }
 
-TEST(TQueue, many_pushes_and_pops) {
+TEST(TQueue, many_pushes_and_pops) 
+{
     Queue<int> q(100);
     for (int i = 0; i < 1000; ++i) {
         q.push(i);
@@ -108,4 +115,27 @@ TEST(TQueue, many_pushes_and_pops) {
         }
     }
     ASSERT_EQ(q.size(), q.get_capacity() / 2); 
+}
+
+TEST(TQueue, test_pseudo_repack)
+{
+    Queue<int> q(3);
+    ASSERT_EQ(q.get_capacity(), 3); 
+    q.push(1);
+    q.push(2);
+    q.push(3);
+    ASSERT_EQ(q.get_capacity(), 3); 
+    q.pop();
+    q.pop();
+    q.push(4); 
+    q.push(5);
+    q.push(6);
+    ASSERT_EQ(q.get_capacity(), 6); 
+    ASSERT_EQ(q.front(), 3);
+    q.pop();
+    ASSERT_EQ(q.front(), 4);
+    q.pop();
+    ASSERT_EQ(q.front(), 5);
+    q.pop();
+    ASSERT_EQ(q.front(), 6);
 }
